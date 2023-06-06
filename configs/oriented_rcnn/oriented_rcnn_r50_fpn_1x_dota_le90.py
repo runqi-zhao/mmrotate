@@ -7,17 +7,15 @@ angle_version = 'le90'
 model = dict(
     type='OrientedRCNN',
     backbone=dict(
-        type='ResNet',
+        type='ReResNet',
         depth=50,
         num_stages=4,
         out_indices=(0, 1, 2, 3),
         frozen_stages=1,
-        norm_cfg=dict(type='BN', requires_grad=True),
-        norm_eval=True,
         style='pytorch',
-        init_cfg=dict(type='Pretrained', checkpoint='torchvision://resnet50')),
+        pretrained='./work_dirs/re_resnet50_c8_batch256-25b16846.pth'),
     neck=dict(
-        type='FPN',
+        type='ReFPN',
         in_channels=[256, 512, 1024, 2048],
         out_channels=256,
         num_outs=5),
