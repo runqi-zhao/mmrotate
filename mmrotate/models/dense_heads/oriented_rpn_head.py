@@ -162,6 +162,7 @@ class OrientedRPNHead(RotatedRPNHead):
                 - loss_cls (torch.Tensor): cls. loss for each scale level.
                 - loss_bbox (torch.Tensor): reg. loss for each scale level.
         """
+        # 这里就是我的在之前加入cls中
         # classification loss
         labels = labels.reshape(-1)
         label_weights = label_weights.reshape(-1)
