@@ -34,8 +34,15 @@ model = dict(
             angle_range=angle_version,
             target_means=[0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
             target_stds=[1.0, 1.0, 1.0, 1.0, 0.5, 0.5]),
+        # loss_cls=dict(
+        #     type='CrossEntropyLoss', use_sigmoid=True, loss_weight=1.0),
         loss_cls=dict(
-            type='CrossEntropyLoss', use_sigmoid=True, loss_weight=1.0),
+            type='FocalLoss',
+            use_sigmoid=True,
+            gamma=1.0,
+            alpha=0.8,
+            loss_weight=1.0),
+
         loss_bbox=dict(
             type='SmoothL1Loss', beta=0.1111111111111111, loss_weight=1.0)),
     roi_head=dict(
@@ -120,3 +127,5 @@ model = dict(
             score_thr=0.05,
             nms=dict(iou_thr=0.1),
             max_per_img=2000)))
+
+optimizer = dict(type='SGD', lr=0.01, momentum=0.9, weight_decay=0.0001)

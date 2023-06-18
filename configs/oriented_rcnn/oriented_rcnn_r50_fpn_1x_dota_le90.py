@@ -64,8 +64,14 @@ model = dict(
                 target_means=(.0, .0, .0, .0, .0),
                 target_stds=(0.1, 0.1, 0.2, 0.2, 0.1)),
             reg_class_agnostic=True,
+            # loss_cls=dict(
+            #     type='CrossEntropyLoss', use_sigmoid=False, loss_weight=1.0),
             loss_cls=dict(
-                type='CrossEntropyLoss', use_sigmoid=False, loss_weight=1.0),
+                type='FocalLoss',
+                use_sigmoid=True,
+                gamma=1.0,
+                alpha=0.25,
+                loss_weight=1.0),
             loss_bbox=dict(type='SmoothL1Loss', beta=1.0, loss_weight=1.0))),
     train_cfg=dict(
         rpn=dict(
