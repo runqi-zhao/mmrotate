@@ -6,7 +6,7 @@ import torch
 from ..builder import ROTATED_DETECTORS, build_backbone, build_head, build_neck
 from .base import RotatedBaseDetector
 
-
+#两步必经代码
 @ROTATED_DETECTORS.register_module()
 class RotatedTwoStageDetector(RotatedBaseDetector):
     """Base class for rotated two-stage detectors.

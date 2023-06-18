@@ -52,5 +52,8 @@ def build_detector(cfg, train_cfg=None, test_cfg=None):
         'train_cfg specified in both outer field and model field '
     assert cfg.get('test_cfg') is None or test_cfg is None, \
         'test_cfg specified in both outer field and model field '
+    # 运行时会将上面的三个值作为参数传入 build_detector 函数，
+    # build_detector 函数会调用 build 函数，build 函数调用 build_func 函数构建检测器对象。
+    # 其中 train_cfg 和 test_cfg 作为默认参数用于构建 detector 对象。
     return ROTATED_DETECTORS.build(
         cfg, default_args=dict(train_cfg=train_cfg, test_cfg=test_cfg))

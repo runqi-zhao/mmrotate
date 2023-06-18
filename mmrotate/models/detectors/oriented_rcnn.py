@@ -4,7 +4,7 @@ import torch
 from ..builder import ROTATED_DETECTORS
 from .two_stage import RotatedTwoStageDetector
 
-
+# 可算是找到入口函数了
 @ROTATED_DETECTORS.register_module()
 class OrientedRCNN(RotatedTwoStageDetector):
     """Implementation of `Oriented R-CNN for Object Detection.`__

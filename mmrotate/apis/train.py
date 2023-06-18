@@ -12,6 +12,11 @@ from mmdet.datasets import (build_dataloader, build_dataset,
 from mmrotate.utils import compat_cfg, find_latest_checkpoint, get_root_logger
 
 
+# 流程为：
+# 1. 构建 data loaders
+# 2. 构建分布式处理对象
+# 3. 构建优化器
+# 4. 创建EpochBasedRunner并进行训练
 def train_detector(model,
                    dataset,
                    cfg,
@@ -21,9 +26,11 @@ def train_detector(model,
                    meta=None):
 
     cfg = compat_cfg(cfg)
+    # 获取 logger
     logger = get_root_logger(log_level=cfg.log_level)
 
     # prepare data loaders
+    # ==================== 构建 data loaders ====================
     dataset = dataset if isinstance(dataset, (list, tuple)) else [dataset]
 
     runner_type = 'EpochBasedRunner' if 'runner' not in cfg else cfg.runner[
@@ -47,6 +54,9 @@ def train_detector(model,
     data_loaders = [build_dataloader(ds, **train_loader_cfg) for ds in dataset]
 
     # put model on gpus
+    # ==================== 构建分布式处理对象 =====================
+    # 如果是多卡会进入此 if
+    # 本次程序完全不涉及
     if distributed:
         find_unused_parameters = cfg.get('find_unused_parameters', False)
         # Sets the `find_unused_parameters` parameter in
@@ -56,13 +66,17 @@ def train_detector(model,
             device_ids=[torch.cuda.current_device()],
             broadcast_buffers=False,
             find_unused_parameters=find_unused_parameters)
+    # 单卡进入
     else:
         model = MMDataParallel(
             model.cuda(cfg.gpu_ids[0]), device_ids=cfg.gpu_ids)
 
     # build runner
+
+    # ====================== 构建优化器 ==========================
     optimizer = build_optimizer(model, cfg.optimizer)
 
+    # ============= 创建 EpochBasedRunner 并进行训练 ==============
     runner = build_runner(
         cfg.runner,
         default_args=dict(
